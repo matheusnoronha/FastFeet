@@ -6,7 +6,7 @@ const models = [];
 
 class Database {
   constructor() {
-    super.init();
+    this.init();
   }
 
   init() {
