@@ -28,6 +28,50 @@ class RecipientsController {
 
     return res.status(201).json(recipients);
   }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      street: Yup.string(),
+      number: Yup.number().integer(),
+      additional_details: Yup.string(),
+      state: Yup.string(),
+      city: Yup.string(),
+      zipcode: Yup.string(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fail.' });
+    }
+
+    const { id } = req.params;
+
+    const recipients = await Recipients.findByPk(id);
+
+    if (!recipients) {
+      return res.status(404).json({ error: 'Recipient not found.' });
+    }
+
+    const {
+      name,
+      street,
+      number,
+      additional_details,
+      city,
+      state,
+      zipcode,
+    } = await recipients.update(req.body);
+
+    return res.json({
+      name,
+      street,
+      number,
+      additional_details,
+      city,
+      state,
+      zipcode,
+    });
+  }
 }
 
 export default new RecipientsController();
